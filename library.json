@@ -1,0 +1,11 @@
+{
+  "name": "null-adpcm",
+  "version": "0.1.0",
+  "description": "Clean-room OKI MSM6258 ADPCM emulator (X68000 ADPCM)",
+  "keywords": "msm6258, adpcm, x68000, audio, emulator",
+  "repository": { "type": "git", "url": "https://github.com/GOROman/null-adpcm.git" },
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*",
+  "build": { "srcDir": "src", "includeDir": "src" }
+}

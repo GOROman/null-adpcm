@@ -1,0 +1,5 @@
+if(NOT TARGET nulladpcm_tools_common)
+  return()
+endif()
+add_executable(play_tone pc/play_tone.cpp)
+target_link_libraries(play_tone PRIVATE nulladpcm_tools_common)

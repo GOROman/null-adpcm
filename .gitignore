@@ -1,0 +1,7 @@
+build/
+build-*/
+.cache/
+*.wav
+!tests/golden/*.wav
+__pycache__/
+.DS_Store

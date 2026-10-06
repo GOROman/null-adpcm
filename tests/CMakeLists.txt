@@ -1,0 +1,4 @@
+add_executable(nulladpcm_tests test_main.cpp test_adpcm.cpp)
+target_link_libraries(nulladpcm_tests PRIVATE nulladpcm_tools_common)
+target_include_directories(nulladpcm_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME nulladpcm_tests COMMAND nulladpcm_tests)

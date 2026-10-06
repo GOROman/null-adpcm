@@ -1,0 +1,55 @@
+cmake_minimum_required(VERSION 3.16)
+project(nulladpcm VERSION 0.1.0 LANGUAGES CXX)
+
+if(NOT DEFINED PROJECT_IS_TOP_LEVEL)
+  if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(PROJECT_IS_TOP_LEVEL ON)
+  else()
+    set(PROJECT_IS_TOP_LEVEL OFF)
+  endif()
+endif()
+
+option(NULLADPCM_BUILD_TOOLS "Build command line tools" ${PROJECT_IS_TOP_LEVEL})
+option(NULLADPCM_BUILD_TESTS "Build unit tests" ${PROJECT_IS_TOP_LEVEL})
+option(NULLADPCM_BUILD_EXAMPLES "Build examples" ${PROJECT_IS_TOP_LEVEL})
+option(NULLADPCM_WARNINGS_AS_ERRORS "Treat core warnings as errors" ${PROJECT_IS_TOP_LEVEL})
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_library(nulladpcm STATIC src/msm6258.cpp src/msm6258_c.cpp)
+add_library(nulladpcm::nulladpcm ALIAS nulladpcm)
+target_include_directories(nulladpcm PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(nulladpcm PUBLIC cxx_std_17)
+if(MSVC)
+  target_compile_options(nulladpcm PRIVATE /W4 /GR-)
+  if(NULLADPCM_WARNINGS_AS_ERRORS)
+    target_compile_options(nulladpcm PRIVATE /WX)
+  endif()
+else()
+  target_compile_options(nulladpcm PRIVATE -Wall -Wextra -Wconversion -Wsign-conversion -Wshadow
+    -fno-exceptions -fno-rtti)
+  if(NULLADPCM_WARNINGS_AS_ERRORS)
+    target_compile_options(nulladpcm PRIVATE -Werror)
+  endif()
+endif()
+
+if(NULLADPCM_BUILD_TOOLS OR NULLADPCM_BUILD_TESTS)
+  add_subdirectory(tools)
+endif()
+if(NULLADPCM_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
+if(NULLADPCM_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
+
+include(GNUInstallDirs)
+install(TARGETS nulladpcm EXPORT nulladpcmTargets ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY src/nulladpcm DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+install(EXPORT nulladpcmTargets NAMESPACE nulladpcm:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nulladpcm)

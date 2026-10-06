@@ -1,0 +1,7 @@
+add_library(nulladpcm_tools_common STATIC common/wav.cpp common/resampler.cpp)
+target_include_directories(nulladpcm_tools_common PUBLIC common)
+target_link_libraries(nulladpcm_tools_common PUBLIC nulladpcm)
+add_executable(adpcm2wav adpcm2wav/main.cpp)
+target_link_libraries(adpcm2wav PRIVATE nulladpcm_tools_common)
+add_executable(wav2adpcm wav2adpcm/main.cpp)
+target_link_libraries(wav2adpcm PRIVATE nulladpcm_tools_common)
